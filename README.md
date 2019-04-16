@@ -1,56 +1,54 @@
 ## Overview
 
-This repository contains my implementation of [**Deep Knowledge Tracing**](https://github.com/chrispiech/DeepKnowledgeTracing) for Udacity's Capstone Project. 
+此仓库包含我对 Udacity 的 Capstone 项目的 [**Deep Knowledge Tracing**](https://github.com/chrispiech/DeepKnowledgeTracing) 实现。
 
-## Objective
+## 目的
 
-Build and train a **LSTM network** to predict the probabilities of a student answering correctly a problem not yet seen by him using the [**ASSISTments Skill-builder data 2009-2010**](https://sites.google.com/site/assistmentsdata/home/assistment-2009-2010-data/skill-builder-data-2009-2010) public dataset.
+构建并训练LSTM网络，以预测学生正确回答他尚未看到的问题的概率。使用的是 [**ASSISTments Skill-builder data 2009-2010**](https://sites.google.com/site/assistmentsdata/home/assistment-2009-2010-data/skill-builder-data-2009-2010) 公共数据集。
 
-## Results
-This is the best results obtained by comparing the validation loss between each network configuration attempted.
+## 结果
+
+这是通过不断修改网络配置，获取的最佳验证损失。
 
 | Test Data (%) | AUC |
 | --- | --- |
 | 20% | 0,85 |
 
-The results, configuration and model's weights of each attempt can be found in the "Log" folder. 
+可以在“Log”文件夹中找到每次尝试的结果，配置和模型权重。
 
-## Requirements
+## 要求
 
-You'll need Python 3.x x64 to be able to run theses projects. 
+您需要Python 3.x x64才能运行这些项目。
 
-If you do not have Python installed yet, it is recommended that you install the [Anaconda](https://www.anaconda.com/download/) distribution of Python, which has almost all packages required in these projects. 
+如果您还没有安装Python，建议您安装Python 的 [Anaconda](https://www.anaconda.com/download/) 发行版，它几乎包含这些项目中所需的所有软件包。
 
-You can also install Python 3.x x64 from [here](https://www.python.org/downloads/)
+您也可以从[这里](https://www.python.org/downloads/)安装Python 3.x x64
 
-## Instructions
+## 说明
 
-1. Clone the repository and navigate to the downloaded folder.
+1. 克隆存储库并导航到下载的文件夹。
 ```	
 git clone https://github.com/lccasagrande/Deep-Knowledge-Tracing.git
 cd Deep-Knowledge-Tracing
 ```
 
-2. Install required packages:
-	- If you already has TensorFlow installed, type:  
+2. 安装所需的包：
+	- 如果已安装TensorFlow，请键入：
 	```
 	pip install -e .
 	```
-	- If you want to install with TensorFlow-GPU, follow [this guide](https://www.tensorflow.org/install/) to check the necessary NVIDIA software on your system. After that, type:
+	- 如果要使用TensorFlow-GPU进行安装，请按照[本指南](https://www.tensorflow.org/install/) 检查系统上必需的NVIDIA软件。然后键入：
 	```
 	pip install -e .[tf_gpu]
 	```
-	- If you want to install with Tensorflow-CPU, type:
+	- 如果要使用Tensorflow-CPU进行安装，请键入：
 	```
 	pip install -e .[tf]
 	```
 
-3. Navigate to the src folder and open the notebook.
+3. 导航到src文件夹并打开 notebook.
 ```	
 cd src
 jupyter notebook DKT.ipynb
 ```
 
-4. The most important step: Have fun !!!
-
-If you have any questions or find a bug, please contact me!
