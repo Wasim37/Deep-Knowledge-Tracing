@@ -28,16 +28,17 @@ def split_dataset(data, validation_rate, testing_rate, shuffle=True):
 def read_file(dataset_path):
     data = pd.read_csv(dataset_path, dtype={'skill_name': str})
 
-    # Step 1 - Remove problems without a skill_id
+    # Step 1 - Remove problems without a skill_id 
     data.dropna(subset=['skill_id'], inplace=True)
 
-    # Step 2 - Convert to sequence by student id
+    # Step 2 - Convert to sequence by student id 
+    # 按学生分组，获取学生每个知识点的对错记录
     students_seq = data.groupby("user_id", as_index=True)["skill_id", "correct"].apply(lambda x: x.values.tolist()).tolist()
 
     # Step 3 - Rearrange the skill_id
-    seqs_by_student = {}
-    skill_ids = {}
-    num_skill = 0
+    seqs_by_student = {} # 每个用户每个知识点的对错记录
+    skill_ids = {} # 知识点id集合
+    num_skill = 0 # 知识点总数
 
     for seq_idx, seq in enumerate(students_seq):
         for (skill, answer) in seq:
