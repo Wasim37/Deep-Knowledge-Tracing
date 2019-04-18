@@ -4,6 +4,7 @@ from StudentModel import DKTModel, DataGenerator
 # 定义常量
 dataset = "data/ASSISTments_skill_builder_data.csv" # Dataset path
 best_model_file = "saved_models/ASSISTments.best.model.weights.hdf5" # File to save the model.
+plot_model_path = "saved_models/"
 train_log = "logs/dktmodel.train.log" # File to save the training log.
 eval_log = "logs/dktmodel.eval.log" # File to save the testing log.
 optimizer = "adagrad" # Optimizer to use
@@ -27,6 +28,14 @@ print("Validation data size: %d" % len(X_val))
 print("Testing data size: %d" % len(X_test))
 print("Number of skills: %d" % num_skills)
 print("==============================")
+
+#======== Data Summary ========
+#Data size: 4163
+#Training data size: 2665
+#Validation data size: 666
+#Testing data size: 832
+#Number of skills: 123
+#==============================
 
 
 # 构建数据迭代器 for training/testing/validation
@@ -57,3 +66,7 @@ student_model.load_weights(best_model_file)
 
 # 测试模型
 result = student_model.evaluate(test_gen, metrics=['auc','acc','pre'], verbose=verbose, filepath_log=eval_log)
+
+
+# 模型可视化
+student_model.plot_model(plot_model_path)

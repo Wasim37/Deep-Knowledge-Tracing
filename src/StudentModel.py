@@ -2,6 +2,7 @@ from keras.callbacks import ModelCheckpoint, Callback, CSVLogger, Progbar
 from keras.models import Sequential
 from keras.layers import TimeDistributed, Masking, Dense, Dropout
 from keras.layers.recurrent import LSTM
+from keras.utils import plot_model
 from keras import backend as K
 from sklearn.metrics import roc_auc_score, precision_score, accuracy_score
 from sklearn.preprocessing import OneHotEncoder
@@ -134,6 +135,12 @@ class DKTModel(object):
     def load_weights(self, filepath):
         assert(filepath is not None)
         self.__model.load_weights(filepath)
+    
+    def plot_model(self, filepath):
+        assert(filepath is not None)
+        plot_model(self.__model, to_file= filepath + 'model.png')
+        plot_model(self.__model, to_file= filepath + 'model_show_shape.png', show_shapes=True, 
+                  show_layer_names=True, rankdir='TB')
 
     def fit(self, train_gen, epochs, val_gen, verbose=0, filepath_bestmodel=None, filepath_log=None):
         assert (isinstance(train_gen, DataGenerator))

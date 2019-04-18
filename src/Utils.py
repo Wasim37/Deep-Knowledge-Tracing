@@ -32,22 +32,31 @@ def read_file(dataset_path):
     data.dropna(subset=['skill_id'], inplace=True)
 
     # Step 2 - Convert to sequence by student id 
-    # 按学生分组，获取学生每个知识点的对错记录
+    # 按学生分组，获取学生每个skill的对错记录
     students_seq = data.groupby("user_id", as_index=True)["skill_id", "correct"].apply(lambda x: x.values.tolist()).tolist()
 
     # Step 3 - Rearrange the skill_id
-    seqs_by_student = {} # 每个用户每个知识点的对错记录
-    skill_ids = {} # 知识点id集合
-    num_skill = 0 # 知识点总数
+    # 每个用户每个知识点的对错记录 
+    # {parse_user_id:[(parse_skill_id: correct)...], parse_user_id:[(parse_skill_id: correct)...], ...}
+    seqs_by_student = {} 
+    # 知识点id集合 
+    # {skill_id:parse_skill_id, ...}
+    skill_ids = {} 
+    num_skill = 0 # 知识点总数: 123
 
     for seq_idx, seq in enumerate(students_seq):
+        #print("seq_idx:", seq_idx, "----seq:", seq)
         for (skill, answer) in seq:
+            #print("skill:", skill, '====answer:', answer)
             if seq_idx not in seqs_by_student:
                 seqs_by_student[seq_idx] = []
+                #print("seqs_by_student:", seqs_by_student)
             if skill not in skill_ids:
                 skill_ids[skill] = num_skill
+                #print("skill_ids:", skill_ids)
                 num_skill += 1
-
+                #print("num_skill:", num_skill)
             seqs_by_student[seq_idx].append((skill_ids[skill], answer))
+            #print("seqs_by_student:", seqs_by_student)
 
     return list(seqs_by_student.values()), num_skill
