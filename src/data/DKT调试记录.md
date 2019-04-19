@@ -255,6 +255,3 @@ X_train, X_val, X_test, y_train, y_val, y_test
 ]
 
 
-Q: builtins.ImportError: Failed to import pydot. You must install pydot and graphviz for `pydotprint` to work.
-A: https://stackoverflow.com/questions/36886711/keras-runtimeerror-failed-to-import-pydot-after-installing-graphviz-and-pyd
-https://www.cnblogs.com/onemorepoint/p/8310996.html

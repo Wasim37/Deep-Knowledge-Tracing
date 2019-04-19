@@ -138,9 +138,24 @@ class DKTModel(object):
     
     def plot_model(self, filepath):
         assert(filepath is not None)
-        plot_model(self.__model, to_file= filepath + 'model.png')
         plot_model(self.__model, to_file= filepath + 'model_show_shape.png', show_shapes=True, 
                   show_layer_names=True, rankdir='TB')
+        print(self.__model.summary())        
+        #_________________________________________________________________
+        #Layer (type)                 Output Shape              Param #   
+        #=================================================================
+        #masking_1 (Masking)          (20, None, 246)           0         
+        #_________________________________________________________________
+        #lstm_1 (LSTM)                (20, None, 250)           497000    
+        #_________________________________________________________________
+        #dropout_1 (Dropout)          (20, None, 250)           0         
+        #_________________________________________________________________
+        #time_distributed_1 (TimeDist (20, None, 123)           30873     
+        #=================================================================
+        #Total params: 527,873
+        #Trainable params: 527,873
+        #Non-trainable params: 0
+        #_________________________________________________________________        
 
     def fit(self, train_gen, epochs, val_gen, verbose=0, filepath_bestmodel=None, filepath_log=None):
         assert (isinstance(train_gen, DataGenerator))
