@@ -10,7 +10,7 @@ eval_log = "logs/dktmodel.eval.log" # File to save the testing log.
 optimizer = "adagrad" # Optimizer to use
 lstm_units = 250 # Number of LSTM units
 batch_size = 20 # Batch size
-epochs = 10 # Number of epochs to train
+epochs = 1 # Number of epochs to train
 dropout_rate = 0.6 # Dropout rate
 verbose = 1 # Verbose = {0,1,2}
 testing_rate = 0.2 # Portion of data to be used for testing

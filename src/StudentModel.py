@@ -17,9 +17,10 @@ def model_evaluate(test_gen, model, metrics, verbose=0):
         def get_target_skills(preds, labels):
             target_skills = labels[:, :, 0:test_gen.num_skills]
             target_labels = labels[:, :, test_gen.num_skills]
+            print(target_skills.shape, target_labels.shape) # (20, 261, 123) (20, 261)
 
-            target_preds = np.sum(preds * target_skills, axis=2)
-
+            target_preds = np.sum(preds * target_skills, axis=2) # https://blog.csdn.net/rifengxxc/article/details/75008427
+            print(target_preds.shape) # (20, 261)
             return target_preds, target_labels
 
         y_true_t = []
@@ -28,28 +29,35 @@ def model_evaluate(test_gen, model, metrics, verbose=0):
 
         while not test_gen.done:
             # Get batch
-            batch_features, batch_labels = test_gen.next_batch()
+            batch_features, batch_labels = test_gen.next_batch() 
+            print(batch_features.shape, batch_labels.shape)  # (20, 261, 246) (20, 261, 124)
 
             # Predict
             predictions = model.predict_on_batch(batch_features)
+            print(predictions.shape) # (20, 261, 123)
 
             # Get target skills
             target_preds, target_labels = get_target_skills(predictions, batch_labels)
+            print(target_preds.shape, target_labels.shape) # (20, 261) (20, 261)
             flat_pred = np.reshape(target_preds, [-1])
             flat_true = np.reshape(target_labels, [-1])
+            print(flat_pred.shape, flat_true.shape) # (5220,) (5220,)
 
             # Remove mask
-            mask_idx = np.where(flat_true == -1.0)[0]
+            mask_idx = np.where(flat_true == -1.0)[0] # -1代表对于知识点缺失？去除缺失数据，方便后期进行acc统计
             flat_pred = np.delete(flat_pred, mask_idx)
             flat_true = np.delete(flat_true, mask_idx)
+            print(flat_pred.shape, flat_true.shape) # (704,) (704,)
 
             # Save it
             y_true_t.extend(flat_true)
             y_pred_t.extend(flat_pred)
+            print(len(y_true_t), len(y_pred_t)) # 704 704
 
             if verbose and test_gen.step < test_gen.total_steps:
                 progbar.update(test_gen.step)
 
+        print(len(y_true_t), len(y_pred_t))
         return y_true_t, y_pred_t
 
     assert (isinstance(test_gen, DataGenerator))
@@ -62,6 +70,7 @@ def model_evaluate(test_gen, model, metrics, verbose=0):
     progbar = Progbar(target=test_gen.total_steps, verbose=verbose)
 
     y_true, y_pred = predict()
+    print(y_true, y_pred)
 
     bin_pred = [1 if p > 0.5 else 0 for p in y_pred]
 
@@ -209,10 +218,10 @@ class DataGenerator(object):
 
         self.step = 0
         self.done = False
-        self.feature_dim = num_skills * 2
-        self.label_dim = num_skills + 1
-        self.features_len = len(features)
-        self.total_steps = int(math.ceil(float(self.features_len) / self.batch_size))
+        self.feature_dim = num_skills * 2 # 123*2
+        self.label_dim = num_skills + 1 # 123+1
+        self.features_len = len(features)  # 10
+        self.total_steps = int(math.ceil(float(self.features_len) / self.batch_size))  # 1 = int(..(10/20))
         self.feature_encoder = OneHotEncoder(self.feature_dim, sparse=False)
         self.label_encoder = OneHotEncoder(self.label_dim, sparse=False)
 
