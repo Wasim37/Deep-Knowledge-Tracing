@@ -30,9 +30,11 @@ def model_evaluate(test_gen, model, metrics, verbose=0):
         while not test_gen.done:
             # Get batch
             batch_features, batch_labels = test_gen.next_batch() 
-            print(batch_features.shape, batch_labels.shape)  # (20, 261, 246) (20, 261, 124)
+            # (20, 261, 246) (20, 261, 124)  261这个时间步骤一直在变，是因为每次随机取样例时，需要按样例最长答题序列填充
+            print(batch_features.shape, batch_labels.shape)  
 
             # Predict
+            # 此处预测是取批次的新的学生答题数据批量预测，为什么不是根据每个学生之前的答题记录预测后期答题概率？
             predictions = model.predict_on_batch(batch_features)
             print(predictions.shape) # (20, 261, 123)
 
@@ -213,15 +215,15 @@ class DataGenerator(object):
     def __init__(self, features, labels, num_skills, batch_size):
         self.features = features
         self.labels = labels
-        self.num_skills = num_skills
-        self.batch_size = batch_size
+        self.num_skills = num_skills # 123
+        self.batch_size = batch_size # 20
 
         self.step = 0
         self.done = False
-        self.feature_dim = num_skills * 2 # 123*2
-        self.label_dim = num_skills + 1 # 123+1
-        self.features_len = len(features)  # 10
-        self.total_steps = int(math.ceil(float(self.features_len) / self.batch_size))  # 1 = int(..(10/20))
+        self.feature_dim = num_skills * 2 # 输入需要进行OneHotEncoder编码，由于每个skill只有对错两种状态，所以乘以2
+        self.label_dim = num_skills + 1 # 为什么加1？
+        self.features_len = len(features)  # 样本总数
+        self.total_steps = int(math.ceil(float(self.features_len) / self.batch_size))  # 单个epoch的训练总次数
         self.feature_encoder = OneHotEncoder(self.feature_dim, sparse=False)
         self.label_encoder = OneHotEncoder(self.label_dim, sparse=False)
 
@@ -337,4 +339,5 @@ class DataGenerator(object):
             self.reset()
             while not self.done:
                 batch_features, batch_labels = self.next_batch()
+                # yield 浅析: https://www.ibm.com/developerworks/cn/opensource/os-cn-python-yield/index.html                
                 yield batch_features, batch_labels

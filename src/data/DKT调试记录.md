@@ -239,6 +239,26 @@ seqs_by_student: {0: [(0, 0.0), (0, 1.0), (0, 0.0), (0, 0.0), (0, 0.0), (0, 0.0)
 ======Utiles====split_dataset=======================
 X_train, X_val, X_test, y_train, y_val, y_test
 返回的是每个学生每个知识点的对错记录
+训练、验证、测试都是单独隔离的用户答题数据！！！
+那么针对整体学生训练的模型后期怎么能用来预测单个学生呢？
+
+
+>>> type(seqs)
+<class 'list'>
+>>> len(seqs)
+4163
+>>> range(0, len(seqs)-1)
+range(0, 4162)
+>>> int(len(seqs) * testing_rate)
+832
+>>> enumerate(seqs)
+<enumerate object at 0x000000001B8EE318>
+>>> len(test_idx)
+832
+>>> len(X_test)
+832
+
+
 
 >>> X_train[:3]
 [
